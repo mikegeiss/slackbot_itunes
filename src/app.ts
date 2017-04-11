@@ -2,10 +2,11 @@ import {ITunesSlackBot} from "./ITunesSlackBot";
 import {ITunesCouchService} from "./ITunesCouchService";
 import set = Reflect.set;
 
-console.log('Hallo Slack');
-// bot.poste('Hallo Slack!);
 
+const dbName:string = process.env.DB_NAME;
+console.log(dbName);
 
+// bot.postMessageToChannel('eday_checkforupdates', 'meow!', params);
 // bot.handleUserInput(function (data: any) {
 //
 //   if (data.text === 'help') {
