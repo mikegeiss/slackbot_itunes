@@ -1,4 +1,4 @@
-var NodeCouchDb = require('node-couchdb');
+import NodeCouchDb from 'node-couchdb';
 
 export class CouchService {
 

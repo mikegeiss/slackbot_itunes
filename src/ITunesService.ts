@@ -1,4 +1,4 @@
-const request = require("request");
+import request from "request";
 
 export class ITunesService {
   static retrieveUrlInfo(url) {
