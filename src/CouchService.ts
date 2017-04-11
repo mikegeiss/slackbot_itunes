@@ -1,7 +1,6 @@
-import NodeCouchDb from 'node-couchdb';
+import * as NodeCouchDB from 'node-couchdb';
 
 export class CouchService {
-
 
   couch;
 
@@ -10,7 +9,7 @@ export class CouchService {
   }
 
   createAndInitCouchDbConnection() {
-    const result = new NodeCouchDb();
+    const result = new NodeCouchDB();
 
     result.listDatabases().then(
       dbs => this.createDbIfNotExists(result, dbs),

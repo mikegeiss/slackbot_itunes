@@ -1,4 +1,4 @@
-import slackbots from 'slackbots';
+import * as Slackbots from 'slackbots';
 
 export class SlackBotWrapper {
 
@@ -6,7 +6,7 @@ export class SlackBotWrapper {
 
   constructor(id: string, private botName: string, private slackChannel: string) {
     console.log('Starte Bot:', botName);
-    this.slackbot = new slackbots({
+    this.slackbot = new Slackbots({
       token: id,
       name: botName
     });
