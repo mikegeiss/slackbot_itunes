@@ -1,36 +1,33 @@
 import {ITunesSlackBot} from "./ITunesSlackBot";
 import {ITunesCouchService} from "./ITunesCouchService";
-import set = Reflect.set;
 
+let couchService: ITunesCouchService = new ITunesCouchService(process.env.DB_NAME);
+const bot: ITunesSlackBot = new ITunesSlackBot(process.env.SLACK_BOT_ID, process.env.SLACK_BOT_NAME, process.env.SLACK_CHANNEL, couchService);
 
-const dbName:string = process.env.DB_NAME;
-console.log(dbName);
+bot.handleUserInput(function (data: any) {
 
-// bot.postMessageToChannel('eday_checkforupdates', 'meow!', params);
-// bot.handleUserInput(function (data: any) {
-//
-//   if (data.text === 'help') {
-//     bot.poste('get \r\nadde ${url}')
-//   }
-//   else if (data.text === 'get') {
-//     bot.posteAlleEintraege();
-//   }
-//   else if (data.text === 'check') {
-//     bot.checkePreisUpdate();
-//     setInterval(() => {
-//       bot.checkePreisUpdate();
-//     }, 600000)
-//   }
-//   else if (data.text.startsWith('adde')) {
-//     couchService.insertUrlToDb(data.text.substring(5)).then(
-//       (successUrl: string) => bot.poste(`${successUrl} erfolgreich eingetragen`)
-//     )
-//   }
-//   else {
-//     bot.poste('Ich verstehe dich nicht :stuck_out_tongue_winking_eye:');
-//   }
-//
-// });
+  if (data.text === 'help') {
+    bot.poste('get \r\nadde ${url}')
+  }
+  else if (data.text === 'get') {
+    bot.posteAlleEintraege();
+  }
+  else if (data.text === 'check') {
+    bot.checkePreisUpdate();
+    setInterval(() => {
+      bot.checkePreisUpdate();
+    }, 600000)
+  }
+  else if (data.text.startsWith('adde')) {
+    couchService.insertUrlToDb(data.text.substring(5)).then(
+      (successUrl: string) => bot.poste(`${successUrl} erfolgreich eingetragen`)
+    )
+  }
+  else {
+    bot.poste('Ich verstehe dich nicht :stuck_out_tongue_winking_eye:');
+  }
+
+});
 
 // bot.on('start', function () {
 //     // more information about additional params https://api.slack.com/methods/chat.postMessage
