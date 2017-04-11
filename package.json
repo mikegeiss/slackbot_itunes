@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "tsc",
     "runSlackBot": "node build/app.js",
-    "compileAndRun": "npm run compile && npm run runSlackBot"
+    "compileAndRun": "npm run compile && npm run runSlackBot",
+    "start":"npm run compileAndRun"
   },
   "author": "",
   "license": "ISC",
