@@ -1,6 +1,7 @@
 import * as NodeCouchDB from 'node-couchdb';
+import {DbService} from "./DbService";
 
-export class CouchService {
+export class CouchDbService implements DbService{
 
   couch;
 
@@ -34,6 +35,36 @@ export class CouchService {
 
   insertToDb(eintrag: any): Promise<any> {
     return this.couch.insert(this.DB_NAME, eintrag);
+  }
+
+  getEntryPrice(id:number):Promise<number>{
+    return new Promise((resolve, rejected) => {
+      this.couch.get(this.DB_NAME, '' + id)
+        .then(({data, headers, status}) => {
+          resolve(data.price);
+          // data is json response
+          // headers is an object with all response headers
+          // status is statusCode number
+        }, err => {
+          console.log('error', err);
+          // either request error occured
+          // ...or err.code=EDOCMISSING if document is missing
+          // ...or err.code=EUNKNOWN if statusCode is unexpected
+        });
+    });
+  }
+
+  getAllUrls() {
+    return this.getAllDocuments().then(
+      (result) => {
+        return result.data.rows.map((row) => row.doc.url);
+      },
+      (error) => console.log("FEHLER", error)
+    )
+  }
+
+  getAllDocuments() {
+    return this.couch.get(this.DB_NAME, '_all_docs', {'include_docs': true});
   }
 
 }

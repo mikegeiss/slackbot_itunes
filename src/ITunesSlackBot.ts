@@ -1,15 +1,16 @@
 import {SlackBotWrapper} from "./SlackBotWrapper";
-import {ITunesCouchService} from "./ITunesCouchService";
+import {ITunesDbService} from "./ITunesCouchService";
 import {ItunesAppInfo} from "./ItunesAppInfo";
+import {DbService} from "./DbService";
 export class ITunesSlackBot extends SlackBotWrapper {
 
-  constructor(id: string, botName: string, slackChannel: string, protected couchService: ITunesCouchService) {
+  constructor(id: string, botName: string, slackChannel: string, protected dbService: ITunesDbService) {
     super(id, botName, slackChannel);
   }
 
   posteAlleEintraege() {
 
-    this.couchService.getUrlInfos()
+    this.dbService.getUrlInfos()
       .then(
         (urlInfos) => this.poste(bereiteAppInfosAufFuerSlack(urlInfos)),
         (error) => console.log('error', error)
@@ -26,7 +27,7 @@ export class ITunesSlackBot extends SlackBotWrapper {
   }
 
   checkePreisUpdate() {
-    this.couchService.getUrlInfos().then(
+    this.dbService.getUrlInfos().then(
       (urlInfos: ItunesAppInfo[]) => this.performComparison(urlInfos),
       (error) => console.log("FEHLER", error)
     );
@@ -40,9 +41,9 @@ export class ITunesSlackBot extends SlackBotWrapper {
     let currentPrices = urlInfos.map((entry: ItunesAppInfo) => entry.price)
 
     urlInfos.forEach((info: ItunesAppInfo) => {
-      this.couchService.getAppPreis(info.trackId).then(
+      this.dbService.getAppPreis(info.trackId).then(
         (dbPrice: number) => {
-          if (dbPrice !== info.price) {
+          if (dbPrice +1 !== info.price) {
             this.poste(`Preis für App hat sich geändert: *${info.trackName}* von \`${dbPrice}\` auf \`${info.price}\``)
           }
         }

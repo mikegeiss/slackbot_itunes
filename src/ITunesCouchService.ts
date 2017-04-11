@@ -1,8 +1,9 @@
-import {CouchService} from "./CouchService";
+import {CouchDbService} from "./CouchService";
 import {ITunesService} from "./ITunesService";
 import {ItunesAppInfo} from "./ItunesAppInfo";
+import {LowDbService} from "./LowDbService";
 
-export class ITunesCouchService extends CouchService {
+export class ITunesDbService extends LowDbService {
 
   insertUrlToDb(url: string): Promise<any> {
 
@@ -31,7 +32,8 @@ export class ITunesCouchService extends CouchService {
   getUrlInfos(): Promise<any> {
 
     return new Promise((resolve, rejected) => {
-      this.getAllUrls().then((urls) => {
+      this.getAllUrls().then((urls: any[]) => {
+          console.log(urls);
           let urlInfoPromises = urls.map(ITunesService.retrieveUrlInfo);
           resolve(Promise.all(urlInfoPromises));
         },
@@ -41,20 +43,7 @@ export class ITunesCouchService extends CouchService {
   }
 
   getAppPreis(id: number): Promise<number> {
-    return new Promise((resolve, rejected) => {
-      this.couch.get(this.DB_NAME, '' + id)
-        .then(({data, headers, status}) => {
-          resolve(data.price);
-          // data is json response
-          // headers is an object with all response headers
-          // status is statusCode number
-        }, err => {
-          console.log('error', err);
-          // either request error occured
-          // ...or err.code=EDOCMISSING if document is missing
-          // ...or err.code=EUNKNOWN if statusCode is unexpected
-        });
-    });
+    return this.getEntryPrice(id);
 
   }
 
@@ -72,19 +61,6 @@ export class ITunesCouchService extends CouchService {
       name: appInfo.trackName,
       price: appInfo.price
     });
-  }
-
-  getAllUrls() {
-    return this.getAllDocuments().then(
-      (result) => {
-        return result.data.rows.map((row) => row.doc.url);
-      },
-      (error) => console.log("FEHLER", error)
-    )
-  }
-
-  getAllDocuments() {
-    return this.couch.get(this.DB_NAME, '_all_docs', {'include_docs': true});
   }
 
 }

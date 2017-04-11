@@ -1,8 +1,8 @@
 import {ITunesSlackBot} from "./ITunesSlackBot";
-import {ITunesCouchService} from "./ITunesCouchService";
+import {ITunesDbService} from "./ITunesCouchService";
 
-let couchService: ITunesCouchService = new ITunesCouchService(process.env.DB_NAME);
-const bot: ITunesSlackBot = new ITunesSlackBot(process.env.SLACK_BOT_ID, process.env.SLACK_BOT_NAME, process.env.SLACK_CHANNEL, couchService);
+let dbService: ITunesDbService = new ITunesDbService(process.env.DB_NAME);
+const bot: ITunesSlackBot = new ITunesSlackBot(process.env.SLACK_BOT_ID, process.env.SLACK_BOT_NAME, process.env.SLACK_CHANNEL, dbService);
 
 bot.handleUserInput(function (data: any) {
 
@@ -19,7 +19,7 @@ bot.handleUserInput(function (data: any) {
     }, 600000)
   }
   else if (data.text.startsWith('adde')) {
-    couchService.insertUrlToDb(data.text.substring(5)).then(
+    dbService.insertUrlToDb(data.text.substring(5)).then(
       (successUrl: string) => bot.poste(`${successUrl} erfolgreich eingetragen`)
     )
   }
