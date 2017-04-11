@@ -6,8 +6,6 @@
     "sourceMap": true,
     "alwaysStrict": true,
     "outDir": "build",
-    "types": [
-      "node"
-    ]
+    "moduleResolution": "node"
   }
 }
