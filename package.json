@@ -8,11 +8,12 @@
     "compile": "tsc",
     "runSlackBot": "node build/app.js",
     "compileAndRun": "npm run compile && npm run runSlackBot",
-    "start":"npm run compileAndRun"
+    "start": "npm run compileAndRun"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/node": "^7.0.12",
     "node-couchdb": "^1.1.1",
     "slackbots": "^1.0.2",
     "sqlite3": "^3.1.8",
