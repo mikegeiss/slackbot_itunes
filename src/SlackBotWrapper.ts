@@ -1,4 +1,4 @@
-var slackbots = require('slackbots');
+import slackbots from 'slackbots';
 
 export class SlackBotWrapper {
 
