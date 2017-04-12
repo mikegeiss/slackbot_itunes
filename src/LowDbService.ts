@@ -37,7 +37,7 @@ export class LowDbService implements DbService {
 
   getEntryPrice(id: number): Promise<number> {
     return new Promise((resolve, rejected) => {
-      resolve(this.getAppInfos().find({id: '' + id}).value())
+      resolve(this.getAppInfos().find({id: '' + id}).value().price)
     });
   }
 

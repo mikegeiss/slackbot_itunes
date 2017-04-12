@@ -1,7 +1,6 @@
 import {SlackBotWrapper} from "./SlackBotWrapper";
 import {ITunesDbService} from "./ITunesCouchService";
 import {ItunesAppInfo} from "./ItunesAppInfo";
-import {DbService} from "./DbService";
 export class ITunesSlackBot extends SlackBotWrapper {
 
   constructor(id: string, botName: string, slackChannel: string, protected dbService: ITunesDbService) {
@@ -43,7 +42,7 @@ export class ITunesSlackBot extends SlackBotWrapper {
     urlInfos.forEach((info: ItunesAppInfo) => {
       this.dbService.getAppPreis(info.trackId).then(
         (dbPrice: number) => {
-          if (dbPrice +1 !== info.price) {
+          if (dbPrice !== info.price) {
             this.poste(`Preis für App hat sich geändert: *${info.trackName}* von \`${dbPrice}\` auf \`${info.price}\``)
           }
         }

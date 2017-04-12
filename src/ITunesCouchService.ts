@@ -44,7 +44,6 @@ export class ITunesDbService extends LowDbService {
 
   getAppPreis(id: number): Promise<number> {
     return this.getEntryPrice(id);
-
   }
 
   // this.couch.getAllUrls().then((urls) => {
@@ -56,7 +55,7 @@ export class ITunesDbService extends LowDbService {
   // }
   insertAppInfo(appInfo: ItunesAppInfo, url) {
     return this.insertToDb({
-      _id: '' + appInfo.trackId,
+      id: '' + appInfo.trackId,
       url: url,
       name: appInfo.trackName,
       price: appInfo.price
