@@ -6,6 +6,10 @@ import * as http from "http";
 let dbService: ITunesDbService = new ITunesDbService(process.env.DB_NAME);
 const bot: ITunesSlackBot = new ITunesSlackBot(process.env.SLACK_BOT_ID, process.env.SLACK_BOT_NAME, process.env.SLACK_CHANNEL, dbService);
 
+setInterval(() => {
+  bot.checkePreisUpdate();
+}, 600000);
+
 bot.handleUserInput(function (data: any) {
 
   if (data.text === 'help') {
@@ -16,9 +20,9 @@ bot.handleUserInput(function (data: any) {
   }
   else if (data.text === 'check') {
     bot.checkePreisUpdate();
-    setInterval(() => {
-      bot.checkePreisUpdate();
-    }, 600000)
+    // setInterval(() => {
+    //   bot.checkePreisUpdate();
+    // }, 600000)
   }
   else if (data.text.startsWith('adde')) {
     dbService.insertUrlToDb(data.text.substring(5)).then(
