@@ -1,5 +1,7 @@
 import {ITunesSlackBot} from "./ITunesSlackBot";
 import {ITunesDbService} from "./ITunesCouchService";
+import * as http from "http";
+
 
 let dbService: ITunesDbService = new ITunesDbService(process.env.DB_NAME);
 const bot: ITunesSlackBot = new ITunesSlackBot(process.env.SLACK_BOT_ID, process.env.SLACK_BOT_NAME, process.env.SLACK_CHANNEL, dbService);
@@ -28,6 +30,15 @@ bot.handleUserInput(function (data: any) {
   }
 
 });
+
+
+
+http.createServer(function (request, response) {
+
+  console.log('request starting for ');
+
+}).listen(process.env.PORT);
+
 
 // bot.on('start', function () {
 //     // more information about additional params https://api.slack.com/methods/chat.postMessage
