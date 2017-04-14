@@ -11,7 +11,14 @@ export class ITunesSlackBot extends SlackBotWrapper {
 
     this.dbService.getUrlInfos()
       .then(
-        (urlInfos) => this.poste(bereiteAppInfosAufFuerSlack(urlInfos)),
+        (urlInfos) => {
+          if (urlInfos.length === 0) {
+            this.poste('keine Einträge in DB');
+          }
+          else {
+            this.poste(bereiteAppInfosAufFuerSlack(urlInfos));
+          }
+        },
         (error) => console.log('error', error)
       );
 
@@ -34,11 +41,12 @@ export class ITunesSlackBot extends SlackBotWrapper {
   }
 
   performComparison(urlInfos: ItunesAppInfo[]) {
-    let time = new Date().toLocaleDateString('de-DE') + ', '+new Date().toLocaleTimeString('de-DE')
+    let time = new Date().toLocaleDateString('de-DE') + ', ' + new Date().toLocaleTimeString('de-DE')
 
     console.log('CHECK', time);
     let currentPrices = urlInfos.map((entry: ItunesAppInfo) => entry.price)
 
+    // TODO MGe - wenn nichts gefunden wurde, dann entsprechende Nachricht
     urlInfos.forEach((info: ItunesAppInfo) => {
       this.dbService.getAppPreis(info.trackId).then(
         (dbPrice: number) => {
