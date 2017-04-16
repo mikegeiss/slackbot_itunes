@@ -28,12 +28,11 @@ export class ITunesDbService extends LowDbService {
     })
 
   }
-
+// TODO MGe - eher getUrlsAusDb.map(url).retrieveUrlInfo()
   getUrlInfos(): Promise<any> {
 
     return new Promise((resolve, rejected) => {
       this.getAllUrls().then((urls: any[]) => {
-          console.log(urls);
           let urlInfoPromises = urls.map(ITunesService.retrieveUrlInfo);
           resolve(Promise.all(urlInfoPromises));
         },

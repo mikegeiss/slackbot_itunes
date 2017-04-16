@@ -1,8 +1,8 @@
 import * as low from 'lowdb'
 import {DbService} from "./DbService";
 import {ITunesService} from "./ITunesService";
+import {ItunesAppInfo} from "./ItunesAppInfo";
 export class LowDbService implements DbService {
-
 
   db;
 
@@ -41,14 +41,28 @@ export class LowDbService implements DbService {
     });
   }
 
+  getAppInfo(id: number): Promise<ItunesAppInfo> {
+    return new Promise((resolve, rejected) => {
+      resolve(this.getAppInfos().find({id: '' + id}).value())
+    });
+  }
+
   private getAppInfos(): any {
     return this.db.get('appInfos');
   }
 
-
-  getAllUrls() :Promise<any>{
+  getAllUrls(): Promise<any> {
     return new Promise((resolve, rejected) => {
       resolve(this.getAppInfos().value().map((entry) => entry.url))
     });
+  }
+
+  updateAppInfoPrice(info: ItunesAppInfo): Promise<any> {
+    console.log(`aktualisiere Preis von ${info.trackName}`);
+    this.db.get('appInfos')
+      .find({id: '' + info.trackId})
+      .assign({price: info.price})
+      .write();
+    return null;
   }
 }

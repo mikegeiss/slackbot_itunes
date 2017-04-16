@@ -26,7 +26,7 @@ export class ITunesSlackBot extends SlackBotWrapper {
       return results
         .sort(ItunesAppInfo.sort)
         .reduce((prev: string, curr: ItunesAppInfo) => {
-          return `${prev} *${curr.trackName}* - ${curr.formattedPrice} (${curr.trackViewUrl}) \r\n\t\thttps://itunes.apple.com/de/lookup?id=${curr.trackId} \r\n`
+          return `${prev} *${curr.trackName}* - ${curr.formattedPrice}\r\n${curr.trackViewUrl}\r\n`
         }, '')
     }
 
@@ -52,6 +52,7 @@ export class ITunesSlackBot extends SlackBotWrapper {
         (dbPrice: number) => {
           if (dbPrice !== info.price) {
             this.poste(`Preis für App hat sich geändert: *${info.trackName}* von \`${dbPrice}\` auf \`${info.price}\``)
+            this.dbService.updateAppInfoPrice(info);
           }
         }
       )
