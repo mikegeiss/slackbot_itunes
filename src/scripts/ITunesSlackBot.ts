@@ -1,6 +1,6 @@
 import {SlackBotWrapper} from "./SlackBotWrapper";
-import {ITunesDbService} from "./ITunesCouchService";
-import {ItunesAppInfo} from "./ItunesAppInfo";
+import {ITunesDbService} from "./services/ITunesCouchService";
+import {ItunesAppInfo} from "./domain/ItunesAppInfo";
 export class ITunesSlackBot extends SlackBotWrapper {
 
   constructor(id: string, botName: string, slackChannel: string, protected dbService: ITunesDbService) {
@@ -35,7 +35,7 @@ export class ITunesSlackBot extends SlackBotWrapper {
   checkePreisUpdate() {
     this.dbService.getUrlInfos().then(
       (urlInfos: ItunesAppInfo[]) => this.performComparison(urlInfos),
-      (error) => console.log("FEHLER", error)
+      (error) => console.log("FEHLER 2", error)
     );
 
   }

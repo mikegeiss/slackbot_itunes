@@ -3,7 +3,7 @@
     "noImplicitAny": false,
     "sourceMap": true,
     "alwaysStrict": true,
-    "outDir": "build",
+    "outDir": "build/scripts",
     "moduleResolution": "node",
     "target": "es5",
     "lib": [

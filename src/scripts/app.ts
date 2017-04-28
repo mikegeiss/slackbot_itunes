@@ -1,14 +1,16 @@
 import {ITunesSlackBot} from "./ITunesSlackBot";
-import {ITunesDbService} from "./ITunesCouchService";
 import * as http from "http";
+import {ITunesDbService} from "./services/ITunesCouchService";
 
-
-let dbService: ITunesDbService = new ITunesDbService(process.env.DB_NAME);
+let dbService: ITunesDbService = new ITunesDbService(process.env.DB_HOST + ':' + process.env.DB_PORT, process.env.DB_NAME);
 const bot: ITunesSlackBot = new ITunesSlackBot(process.env.SLACK_BOT_ID, process.env.SLACK_BOT_NAME, process.env.SLACK_CHANNEL, dbService);
+// new ElectronService();
 
+
+bot.checkePreisUpdate();
 setInterval(() => {
   bot.checkePreisUpdate();
-}, 600000);
+}, 3600000);
 
 bot.handleUserInput(function (data: any) {
 
@@ -19,6 +21,7 @@ bot.handleUserInput(function (data: any) {
     bot.posteAlleEintraege();
   }
   else if (data.text === 'check') {
+    bot.poste('Prüfung wird durchgeführt')
     bot.checkePreisUpdate();
     // setInterval(() => {
     //   bot.checkePreisUpdate();
@@ -37,12 +40,12 @@ bot.handleUserInput(function (data: any) {
 
 
 
-http.createServer(function (request, response) {
-
-  console.log('request starting for ');
-
-}).listen(process.env.PORT);
-
+// http.createServer(function (request, response) {
+//
+//   console.log('request starting for ');
+//
+// }).listen(process.env.PORT);
+//
 
 // bot.on('start', function () {
 //     // more information about additional params https://api.slack.com/methods/chat.postMessage
