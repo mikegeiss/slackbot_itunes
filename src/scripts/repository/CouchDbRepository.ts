@@ -1,12 +1,20 @@
 import * as NodeCouchDB from 'node-couchdb';
-import {DbService} from "./DbService";
+import {DbRepository} from "./DbRepository";
+import {ItunesAppInfo} from "../domain/ItunesAppInfo";
 
-export class CouchDbService implements DbService{
+export class CouchDbRepository implements DbRepository {
 
-  couch;
+  private couchInstance;
+  private dbName
 
-  constructor(protected DB_NAME: string) {
-    this.couch = this.createAndInitCouchDbConnection()
+  initDb(dbUrl:string, name: string): Promise<any> {
+    this.dbName = name;
+    this.couchInstance = this.createAndInitCouchDbConnection()
+    return null;
+  }
+
+  updateAppInfoPrice(info: ItunesAppInfo): Promise<any> {
+    return undefined;
   }
 
   createAndInitCouchDbConnection() {
@@ -21,25 +29,25 @@ export class CouchDbService implements DbService{
   }
 
   createDbIfNotExists(couch, dbs) {
-    if (!dbs.find((entry) => entry === this.DB_NAME)) {
-      console.log(`Datenbank ${this.DB_NAME} wird neu erstellt`);
-      couch.createDatabase(this.DB_NAME).then(
-        () => console.log(`Datenbank ${this.DB_NAME} wurde erstellt`),
+    if (!dbs.find((entry) => entry === this.dbName)) {
+      console.log(`Datenbank ${this.dbName} wird neu erstellt`);
+      couch.createDatabase(this.dbName).then(
+        () => console.log(`Datenbank ${this.dbName} wurde erstellt`),
         err => console.log('error beim Erstellen der DB', err)
       );
     }
     else {
-      console.log(`Datenbank ${this.DB_NAME} existiert bereits`);
+      console.log(`Datenbank ${this.dbName} existiert bereits`);
     }
   }
 
   insertToDb(eintrag: any): Promise<any> {
-    return this.couch.insert(this.DB_NAME, eintrag);
+    return this.couchInstance.insert(this.dbName, eintrag);
   }
 
-  getEntryPrice(id:number):Promise<number>{
+  getEntryPrice(id: number): Promise<number> {
     return new Promise((resolve, rejected) => {
-      this.couch.get(this.DB_NAME, '' + id)
+      this.couchInstance.get(this.dbName, '' + id)
         .then(({data, headers, status}) => {
           resolve(data.price);
           // data is json response
@@ -54,17 +62,17 @@ export class CouchDbService implements DbService{
     });
   }
 
-  getAllUrls() {
+  getAllUrls(): Promise<any> {
     return this.getAllDocuments().then(
       (result) => {
         return result.data.rows.map((row) => row.doc.url);
       },
-      (error) => console.log("FEHLER", error)
+      (error) => console.log("FEHLER 3", error)
     )
   }
 
   getAllDocuments() {
-    return this.couch.get(this.DB_NAME, '_all_docs', {'include_docs': true});
+    return this.couchInstance.get(this.dbName, '_all_docs', {'include_docs': true});
   }
 
 }

@@ -1,13 +1,17 @@
 import * as low from 'lowdb'
-import {DbService} from "./DbService";
-import {ITunesService} from "./ITunesService";
-import {ItunesAppInfo} from "./ItunesAppInfo";
-export class LowDbService implements DbService {
+import {DbRepository} from "./DbRepository";
+import {ItunesAppInfo} from "../domain/ItunesAppInfo";
+export class LowDbRepository implements DbRepository {
 
   db;
 
+  initDb(name: string): Promise<any> {
+    return undefined;
+  }
+
+
+
   constructor(name: string) {
-    // TODO MGe - what todo with name?
     this.db = low('db.json');
 
     // Set some defaults if your JSON file is empty

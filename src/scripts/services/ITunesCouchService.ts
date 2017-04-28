@@ -1,9 +1,17 @@
-import {CouchDbService} from "./CouchService";
 import {ITunesService} from "./ITunesService";
-import {ItunesAppInfo} from "./ItunesAppInfo";
-import {LowDbService} from "./LowDbService";
+import {ItunesAppInfo} from "../domain/ItunesAppInfo";
+import {DbRepository} from "../repository/DbRepository";
+import {CouchDbRepository} from "../repository/CouchDbRepository";
+import {PouchDbRepository} from "../repository/PouchDbRepository";
 
-export class ITunesDbService extends LowDbService {
+export class ITunesDbService {
+
+  dbService: DbRepository;
+
+  constructor(dbUrl:string, name:string) {
+    this.dbService = new PouchDbRepository();
+    this.dbService.initDb(dbUrl, name)
+  }
 
   insertUrlToDb(url: string): Promise<any> {
 
@@ -22,27 +30,28 @@ export class ITunesDbService extends LowDbService {
             console.log(`*${url}* korrekt eingefügt`),// TODO poste(`*${url}* korrekt eingefügt`),
               resolve(url);
           },
-          (error) => console.log('eintrag fehlerhaft einfügen', error)
+          (error) => console.error('Eintrag einfügen fehlerhaft', error)
         );
       // TODO MGe - in der letzten Ausgabe nochmal den Titel mit auusgeben,vermutlich vorher den titel holen
     })
 
   }
+
 // TODO MGe - eher getUrlsAusDb.map(url).retrieveUrlInfo()
   getUrlInfos(): Promise<any> {
 
     return new Promise((resolve, rejected) => {
-      this.getAllUrls().then((urls: any[]) => {
+      this.dbService.getAllUrls().then((urls: any[]) => {
           let urlInfoPromises = urls.map(ITunesService.retrieveUrlInfo);
           resolve(Promise.all(urlInfoPromises));
         },
-        (error) => console.log("FEHLER", error)
+        (error) => console.log("FEHLER 1", error)
       );
     });
   }
 
   getAppPreis(id: number): Promise<number> {
-    return this.getEntryPrice(id);
+    return this.dbService.getEntryPrice(id);
   }
 
   // this.couch.getAllUrls().then((urls) => {
@@ -53,12 +62,16 @@ export class ITunesDbService extends LowDbService {
   // )
   // }
   insertAppInfo(appInfo: ItunesAppInfo, url) {
-    return this.insertToDb({
-      id: '' + appInfo.trackId,
+    return this.dbService.insertToDb({
+      trackId: appInfo.trackId,
       url: url,
       name: appInfo.trackName,
       price: appInfo.price
     });
+  }
+
+  updateAppInfoPrice(info: ItunesAppInfo) {
+    this.dbService.updateAppInfoPrice(info);
   }
 
 }
