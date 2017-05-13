@@ -1,16 +1,16 @@
 import {ITunesSlackBot} from "./ITunesSlackBot";
 import * as http from "http";
-import {ITunesDbService} from "./services/ITunesCouchService";
+import {ITunesDbService} from "./services/ITunesDbService";
 
 let dbService: ITunesDbService = new ITunesDbService(process.env.DB_HOST + ':' + process.env.DB_PORT, process.env.DB_NAME);
 const bot: ITunesSlackBot = new ITunesSlackBot(process.env.SLACK_BOT_ID, process.env.SLACK_BOT_NAME, process.env.SLACK_CHANNEL, dbService);
 // new ElectronService();
 
 
-bot.checkePreisUpdate();
-setInterval(() => {
-  bot.checkePreisUpdate();
-}, 3600000);
+// bot.checkePreisUpdate();
+// setInterval(() => {
+//   bot.checkePreisUpdate();
+// }, 3600000);
 
 bot.handleUserInput(function (data: any) {
 
