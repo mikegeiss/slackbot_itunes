@@ -8,7 +8,7 @@ export class ITunesDbService {
 
   dbService: DbRepository;
 
-  constructor(dbUrl: string, name: string) {
+  constructor(dbUrl:string, name:string) {
     this.dbService = new PouchDbRepository();
     this.dbService.initDb(dbUrl, name)
   }
@@ -24,14 +24,14 @@ export class ITunesDbService {
     return new Promise((resolve, rejected) => {
       // TODO MGe - check if is valid itunes url
       ITunesService.retrieveUrlInfo(url)
-        .then((appInfo: ItunesAppInfo) => this.insertAppInfo(appInfo))
-        .then((result) => {
-          console.log(`*${url}* korrekt eingefügt`)// TODO poste(`*${url}* korrekt eingefügt`),
-          resolve(url);
-        }).catch((error) => {
-          console.error('Eintrag einfügen fehlerhaft', error)
-        }
-      );
+        .then((appInfo: ItunesAppInfo) => this.insertAppInfo(appInfo, url), (error) => console.log(error))
+        .then(
+          (result) => {
+            console.log(`*${url}* korrekt eingefügt`),// TODO poste(`*${url}* korrekt eingefügt`),
+              resolve(url);
+          },
+          (error) => console.error('Eintrag einfügen fehlerhaft', error)
+        );
       // TODO MGe - in der letzten Ausgabe nochmal den Titel mit auusgeben,vermutlich vorher den titel holen
     })
 
@@ -41,13 +41,12 @@ export class ITunesDbService {
   getUrlInfos(): Promise<any> {
 
     return new Promise((resolve, rejected) => {
-      this.dbService.getAllUrls()
-        .then((urls: any[]) => {
-            let urlInfoPromises = urls.map(ITunesService.retrieveUrlInfo);
-            resolve(Promise.all(urlInfoPromises));
-          },
-          (error) => console.error("FEHLER 1", error)
-        );
+      this.dbService.getAllUrls().then((urls: any[]) => {
+          let urlInfoPromises = urls.map(ITunesService.retrieveUrlInfo);
+          resolve(Promise.all(urlInfoPromises));
+        },
+        (error) => console.log("FEHLER 1", error)
+      );
     });
   }
 
@@ -55,8 +54,20 @@ export class ITunesDbService {
     return this.dbService.getEntryPrice(id);
   }
 
-  insertAppInfo(appInfo: ItunesAppInfo) {
-    return this.dbService.insertToDb(ItunesAppInfo.create(appInfo));
+  // this.couch.getAllUrls().then((urls) => {
+  //     let urlInfoPromises = urls.map(ITunesService.retrieveUrlInfo);
+  //     Promise.all(urlInfoPromises).then(performComparison);
+  //   },
+  //   (error) => console.log("FEHLER", error)
+  // )
+  // }
+  insertAppInfo(appInfo: ItunesAppInfo, url) {
+    return this.dbService.insertToDb({
+      trackId: appInfo.trackId,
+      url: url,
+      name: appInfo.trackName,
+      price: appInfo.price
+    });
   }
 
   updateAppInfoPrice(info: ItunesAppInfo) {

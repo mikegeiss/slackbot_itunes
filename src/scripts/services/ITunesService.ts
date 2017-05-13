@@ -8,7 +8,7 @@ export class ITunesService {
           resolve(body.results[0]);
         }
         else {
-          console.error(error, response, body);
+          console.log(error, response, body);
         }
       });
     })

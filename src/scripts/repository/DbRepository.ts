@@ -1,6 +1,6 @@
 import {ItunesAppInfo} from "../domain/ItunesAppInfo";
 export interface DbRepository {
-  insertToDb(eintrag: ItunesAppInfo): Promise<any>;
+  insertToDb(eintrag: any): Promise<any>;
   getEntryPrice(id: number): Promise<number>;
   getAllUrls(): Promise<any>;
   updateAppInfoPrice(info: ItunesAppInfo): Promise<any>;
