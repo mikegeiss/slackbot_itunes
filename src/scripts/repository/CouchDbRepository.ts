@@ -3,6 +3,9 @@ import {DbRepository} from "./DbRepository";
 import {ItunesAppInfo} from "../domain/ItunesAppInfo";
 
 export class CouchDbRepository implements DbRepository {
+  getEntry(id: number): Promise<ItunesAppInfo> {
+    return undefined;
+  }
 
   private couchInstance;
   private dbName

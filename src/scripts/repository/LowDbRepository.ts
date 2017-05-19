@@ -2,6 +2,9 @@ import * as low from 'lowdb'
 import {DbRepository} from "./DbRepository";
 import {ItunesAppInfo} from "../domain/ItunesAppInfo";
 export class LowDbRepository implements DbRepository {
+  getEntry(id: number): Promise<ItunesAppInfo> {
+    throw new Error('Method not implemented.');
+  }
 
   db;
 
@@ -32,7 +35,7 @@ export class LowDbRepository implements DbRepository {
 
   insertToDb(appInfo: any) {
     // TODO MGe - check if exists
-    console.log('push to db', appInfo);
+    // console.log('push to db', appInfo);
     this.getAppInfos().push(appInfo).write();
     return new Promise((resolve, rejected) => {
       resolve(appInfo.url);
@@ -62,7 +65,7 @@ export class LowDbRepository implements DbRepository {
   }
 
   updateAppInfoPrice(info: ItunesAppInfo): Promise<any> {
-    console.log(`aktualisiere Preis von ${info.trackName}`);
+    // console.log(`aktualisiere Preis von ${info.trackName}`);
     this.db.get('appInfos')
       .find({id: '' + info.trackId})
       .assign({price: info.price})
