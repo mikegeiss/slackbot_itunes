@@ -1,5 +1,5 @@
 import {SlackBotWrapper} from "./SlackBotWrapper";
-import {ITunesDbService} from "./services/ITunesCouchService";
+import {ITunesDbService} from "./services/ITunesDbService";
 import {ItunesAppInfo} from "./domain/ItunesAppInfo";
 export class ITunesSlackBot extends SlackBotWrapper {
 
@@ -19,7 +19,7 @@ export class ITunesSlackBot extends SlackBotWrapper {
             this.poste(bereiteAppInfosAufFuerSlack(urlInfos));
           }
         },
-        (error) => console.log('error', error)
+        (error) => console.error('error', error)
       );
 
     function bereiteAppInfosAufFuerSlack(results: ItunesAppInfo[]) {
@@ -35,7 +35,7 @@ export class ITunesSlackBot extends SlackBotWrapper {
   checkePreisUpdate() {
     this.dbService.getUrlInfos().then(
       (urlInfos: ItunesAppInfo[]) => this.performComparison(urlInfos),
-      (error) => console.log("FEHLER 2", error)
+      (error) => console.error("FEHLER 2", error)
     );
 
   }
