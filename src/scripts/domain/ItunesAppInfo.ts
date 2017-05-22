@@ -1,5 +1,6 @@
 export class ItunesAppInfo {
 
+  jsonAppInfoUrl: string;
   trackViewUrl: string;
   currency: string;
   artistId: number;
@@ -15,6 +16,7 @@ export class ItunesAppInfo {
     result.price = input.price;
     result.trackName = input.trackName;
     result.formattedPrice = input.formattedPrice;
+    result.jsonAppInfoUrl = `https://itunes.apple.com/de/lookup?id=${input.trackId}`;
     return result;
   }
 
