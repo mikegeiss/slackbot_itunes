@@ -7,41 +7,63 @@ export class PouchDbRepository implements DbRepository {
   private pouchInstance;
   private dbName
 
-  initDb(dbUrl: string, name: string): Promise<any> {
+  initDb(dbUrl: string, name: string): any {
     this.dbName = name;
     try {
       this.pouchInstance = new PouchDB(`${dbUrl}/${this.dbName}`);
+      // return this.pouchInstance.createIndex({
+      //   index: {fields: ['trackId']}
+      // }).then(
+      // (success) => console.log('success', success),
+      // (error) => console.log('error', error)
+      // );
     }
     catch (exception) {
       console.error('Fehler beim Initialisieren der DB. HOST, PORT und DBName prüfen: ', exception)
     }
+    // TODO MGe - check if connection erfolgreich
     // TODO MGe - initIfNotExists
-    return null;
+    // return null;
   }
 
-  insertToDb(eintrag: any): Promise<any> {
-    return undefined;
+  getEntry(trackId: number): Promise<ItunesAppInfo> {
+    return this.getDb().get(trackId);
+  }
+
+  insertToDb(eintrag: ItunesAppInfo): Promise<any> {
+    return this.getDb().put(Object.assign(eintrag, {_id: '' + eintrag.trackId}));
   }
 
   getEntryPrice(id: number): Promise<number> {
-    return undefined;
+    return this.pouchInstance.get(id)
+      .then((response) => response.price);
+
   }
 
   getAllUrls(): Promise<any> {
-    return this.getAllDocuments().then(
-      (result) => {
-        return result.rows.map((row) => row.doc.url);
-      },
-      (error) => console.error("Fehler bei Zugriff auf Datenbank", error)
-    )
+    return this.getAllDocuments()
+      .then((result) => result.rows
+        .filter((row) => row.doc.jsonAppInfoUrl)
+        .map((row) => row.doc.jsonAppInfoUrl)
+      ).catch((err) => {
+        console.error("Fehler bei Ermittlen der Urls", err)
+      });
   }
 
   updateAppInfoPrice(info: ItunesAppInfo): Promise<any> {
-    return undefined;
+    return this.getEntry(info.trackId)
+      .then((response) => {
+        response.price = info.price;
+        return this.pouchInstance.put(response);
+      });
   }
 
   getAllDocuments() {
     return this.pouchInstance.allDocs({'include_docs': true});
+  }
+
+  getDb(): any {
+    return this.pouchInstance;
   }
 
 }

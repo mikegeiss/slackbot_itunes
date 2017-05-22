@@ -20,11 +20,7 @@ describe('PouchDB Repository', () => {
   });
 
   afterEach(() => {
-    return compare.destroy().then(function (response) {
-      // success
-    }).catch((err) => {
-      return expect(true).to.be.false
-    });
+    return compare.destroy();
   });
 
   function createEinrag(trackId: number, price: number, url?: string): ItunesAppInfo {
