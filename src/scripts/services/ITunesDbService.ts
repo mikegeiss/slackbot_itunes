@@ -38,7 +38,7 @@ export class ITunesDbService {
   }
 
 // TODO MGe - eher getUrlsAusDb.map(url).retrieveUrlInfo()
-  getUrlInfos(): Promise<any> {
+  getUrlInfos(): Promise<ItunesAppInfo[]> {
 
     return new Promise((resolve, rejected) => {
       this.dbService.getAllUrls()
