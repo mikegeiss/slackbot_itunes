@@ -24,7 +24,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "electron": "1.6.8",
+    "electron": "1.6.16",
     "env-cmd": "5.1.0",
     "lowdb": "0.16.2",
     "node-couchdb": "1.1.1",
